@@ -10,3 +10,7 @@
 
 **12/3/19**
 -Tested the code for loading in images from folders
+-Modified the loading function to fetch both the images and their labels
+-Tested the balance of the dataset
+-Wrote a helper method for assigning labels based on the file names
+-Tested the helper method

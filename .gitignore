@@ -21,6 +21,7 @@
 *.pyc
 .svn/
 *.log
+*.gch
 
 # IDE files which should
 # be ignored
