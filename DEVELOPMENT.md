@@ -14,3 +14,6 @@
 -Tested the balance of the dataset
 -Wrote a helper method for assigning labels based on the file names
 -Tested the helper method
+-Wrote the method for converting images to 1D vectors (necessary for the simple neural network architecture)
+-Tested the converter
+-Installed Eigen for the project

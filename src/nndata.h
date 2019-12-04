@@ -1,11 +1,15 @@
 #pragma once
 
+#include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/eigen.hpp>
 #include <vector>
 #include <string>
 #include <experimental/filesystem>
 
 using namespace cv;
+using Eigen::MatrixXd;
+
 
 // NN for Neural Network
 class NNData {
@@ -15,6 +19,7 @@ class NNData {
         std::string kDogInFileName = "dog";
         std::string kCatInFileName = "cat";
         int kLabelLength = 3;
+        int kImageSize = 200;
 
 
     public:
@@ -40,5 +45,18 @@ class NNData {
          * @return           Integer label. 1 for dog, 0 for cat
          */
         int DogOrCat(std::string file_name);
+
+        /**
+         * Converts the vector of 3-channeled 2D images into a vector of
+         * 1-channeled 1D images  
+         *
+         * @param  images Vector containing the images
+         * @return        Vector of reshaped images (images will be 1D
+         *                (technically 2D, but there's one column, so
+         *                it's like 1D))
+         */
+        std::vector<Mat> ConvertTo1D(std::vector<Mat> images);
+
+        void ConvertToEigen(std::pair<std::vector<Mat>, std::vector<int>> data);
 
 };
