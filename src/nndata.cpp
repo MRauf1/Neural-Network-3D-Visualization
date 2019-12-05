@@ -53,17 +53,34 @@ std::vector<Mat> NNData::ConvertTo1D(std::vector<Mat> images) {
     std::vector<Mat> reshaped_images;
 
     for(Mat image : images) {
-        int new_num_rows = image.rows * image.cols * image.channels();
-        reshaped_images.push_back(image.reshape(1, new_num_rows));
+        reshaped_images.push_back(image.reshape(1, kNumPixels));
     }
 
     return reshaped_images;
 
 }
 
+// TODO: Make this more generalized
+std::vector<MatrixXd> NNData::ConvertToEigen(std::vector<Mat> images) {
 
-void NNData::ConvertToEigen(std::pair<std::vector<Mat>, std::vector<int>>) {
+    std::vector<MatrixXd> images_matrix;
 
+    for(Mat image : images) {
+        MatrixXd image_matrix(kNumPixels, 1);
+        cv2eigen(image, image_matrix);
+        images_matrix.push_back(image_matrix);
+    }
 
+    return images_matrix;
+
+}
+
+std::vector<MatrixXd> NNData::Preprocess(std::vector<MatrixXd> images) {
+
+    for(int index = 0; index < images.size(); index++) {
+        images.at(index) /= kMaxPixelValue;
+    }
+
+    return images;
 
 }

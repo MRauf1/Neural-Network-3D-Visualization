@@ -3,11 +3,13 @@
 #include "../src/nndata.cpp"
 
 using namespace cv;
+using Eigen::MatrixXd;
 
-int kImageSize = 200;
+int kImageSize = 100;
 int kChannels = 3;
 int kNumTrain = 15000;
 int kNumValidationTest = 5000;
+int kNumPixels = kImageSize * kImageSize * kChannels;
 
 NNData data;
 std::pair<std::vector<Mat>, std::vector<int>> train_data = data.LoadFromDirectory("../bin/data/train");
@@ -135,4 +137,24 @@ TEST_CASE("Test consistency between images for ConvertTo1D") {
 
     REQUIRE(reshaped_channel_two == channel_two);
     REQUIRE(reshaped_channel_two_second == channel_two_second);
+}
+
+// Testing ConvertToEigen method
+TEST_CASE("Test ConvertToEigen") {
+    std::vector<Mat> reshaped_data = data.ConvertTo1D(test_data.first);
+    std::vector<MatrixXd> images = data.ConvertToEigen(reshaped_data);
+    REQUIRE(images.size() == kNumValidationTest);
+    REQUIRE(images.at(0).rows() == kNumPixels);
+    REQUIRE(images.at(0).cols() == 1);
+}
+
+// Testing Preprocess method
+TEST_CASE("Test Preprocess") {
+    std::vector<Mat> reshaped_data = data.ConvertTo1D(test_data.first);
+    std::vector<MatrixXd> images = data.ConvertToEigen(reshaped_data);
+    images = data.Preprocess(images);
+    double value = (images.at(0))(0, 0);
+    double value2 = (images.at(593))(23, 0);
+    REQUIRE((value > 0 && value < 1) == true);
+    REQUIRE((value2 > 0 && value2 < 1) == true);
 }

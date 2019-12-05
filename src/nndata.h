@@ -19,7 +19,10 @@ class NNData {
         std::string kDogInFileName = "dog";
         std::string kCatInFileName = "cat";
         int kLabelLength = 3;
-        int kImageSize = 200;
+        int kImageSize = 100;
+        int kChannels = 3;
+        int kNumPixels = kImageSize * kImageSize * kChannels;
+        double kMaxPixelValue = 255.0;
 
 
     public:
@@ -48,7 +51,7 @@ class NNData {
 
         /**
          * Converts the vector of 3-channeled 2D images into a vector of
-         * 1-channeled 1D images  
+         * 1-channeled 1D images
          *
          * @param  images Vector containing the images
          * @return        Vector of reshaped images (images will be 1D
@@ -57,6 +60,8 @@ class NNData {
          */
         std::vector<Mat> ConvertTo1D(std::vector<Mat> images);
 
-        void ConvertToEigen(std::pair<std::vector<Mat>, std::vector<int>> data);
+        std::vector<MatrixXd> ConvertToEigen(std::vector<Mat>);
+
+        std::vector<MatrixXd> Preprocess(std::vector<MatrixXd> images);
 
 };

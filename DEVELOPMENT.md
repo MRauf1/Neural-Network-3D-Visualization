@@ -17,3 +17,11 @@
 -Wrote the method for converting images to 1D vectors (necessary for the simple neural network architecture)
 -Tested the converter
 -Installed Eigen for the project
+-Set the resize resolution to 200x200
+
+**12/4/19**
+-Wrote the method for converting the OpenCV images into Eigen matrices
+-Tested the converter
+-Wrote the method for preprocessing the data
+-Tested the preprocessing method
+-Changes the resize resolution to 100x100
