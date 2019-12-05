@@ -24,4 +24,11 @@
 -Tested the converter\
 -Wrote the method for preprocessing the data\
 -Tested the preprocessing method\
--Changes the resize resolution to 100x100 
+-Changed the resize resolution to 100x100
+
+**12/5/19**\
+-Created the file for the Neural Network itself\
+-Began working on the Neural Network\
+-Implemented the constructor\
+-Implemented the getters\
+-Implemented the method for initializing weights and biases of the Neural Network
