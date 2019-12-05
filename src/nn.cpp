@@ -38,11 +38,24 @@ void NN::InitializeWeightsBiases(std::vector<int> neurons) {
 
 }
 
+MatrixXd NN::Feedforward(MatrixXd matrix) {
+
+    for(int layer = 0; layer < (this->layers - 1); layer++) {
+        MatrixXd weight = this->weights.at(layer);
+        MatrixXd bias = this->biases.at(layer);
+        matrix = weight * matrix + bias;
+        matrix = ApplySigmoid(matrix);
+    }
+
+    this->current_matrix = matrix;
+    return matrix;
+
+}
+
 double NN::Sigmoid(double num) {
     return (1.0 / (1.0 + exp(-num)));
 }
 
 MatrixXd NN::ApplySigmoid(MatrixXd matrix) {
-    this->current_matrix = matrix.unaryExpr(&Sigmoid);
-    return this->current_matrix;
+    return matrix.unaryExpr(&Sigmoid);
 }

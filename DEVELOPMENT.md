@@ -34,4 +34,6 @@
 -Implemented the method for initializing weights and biases of the Neural Network\
 -Implemented the element Sigmoid function\
 -Implemented the matrix Sigmoid function\
--Tested both of the Sigmoid functions
+-Tested both of the Sigmoid functions\
+-Programmed the Feedforward portion of the Network\
+-Partially tested the Feedforward method

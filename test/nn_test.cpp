@@ -33,6 +33,13 @@ TEST_CASE("Check the weights randomness") {
     REQUIRE(sample_weight(0, 0) != sample_weight(0, 1));
 }
 
+TEST_CASE("Check the biases size") {
+    std::vector<MatrixXd> biases = simple_test_nn.GetBiases();
+    MatrixXd sample_bias = biases.at(0);
+    REQUIRE(sample_bias.rows() == 2);
+    REQUIRE(sample_bias.cols() == 1);
+}
+
 // Check the constructor
 TEST_CASE("Check the constructor") {
     int layers = simple_test_nn.GetLayers();
@@ -41,7 +48,17 @@ TEST_CASE("Check the constructor") {
     REQUIRE(neurons.size() == 3);
     REQUIRE(neurons.at(0) == 3);
     REQUIRE(neurons.at(1) == 2);
-    REQUIRE(neurons.at(2`) == 3);
+    REQUIRE(neurons.at(2) == 3);
+}
+
+// Check Feedforward method
+// WARNING: Correctness of calculations of Feedforward
+// is not tested. Potentially implement it.
+TEST_CASE("Check matrix size after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    REQUIRE(result.rows() == 3);
+    REQUIRE(result.cols() == 1);
 }
 
 // Check Sigmoid method

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <iostream>
 
 using Eigen::MatrixXd;
 
@@ -33,6 +34,8 @@ class NN {
         std::vector<MatrixXd> GetBiases();
 
         void InitializeWeightsBiases(std::vector<int> neurons);
+
+        MatrixXd Feedforward(MatrixXd matrix);
 
         double static Sigmoid(double num);
 
