@@ -32,3 +32,29 @@ TEST_CASE("Check the weights randomness") {
     MatrixXd sample_weight = weights.at(0);
     REQUIRE(sample_weight(0, 0) != sample_weight(0, 1));
 }
+
+// Check the constructor
+TEST_CASE("Check the constructor") {
+    int layers = simple_test_nn.GetLayers();
+    std::vector<int> neurons = simple_test_nn.GetNeurons();
+    REQUIRE(layers == 3);
+    REQUIRE(neurons.size() == 3);
+    REQUIRE(neurons.at(0) == 3);
+    REQUIRE(neurons.at(1) == 2);
+    REQUIRE(neurons.at(2`) == 3);
+}
+
+// Check Sigmoid method
+TEST_CASE("Check the Sigmoid") {
+    double num = 3.5;
+    double result = simple_test_nn.Sigmoid(num);
+    REQUIRE((result > 0.97 && result < 0.98) == true);
+}
+
+// Check ApplySigmoid method
+// Checked this manually too
+TEST_CASE("Check the ApplySigmoid") {
+    MatrixXd matrix = MatrixXd::Random(2, 2);
+    MatrixXd result = simple_test_nn.ApplySigmoid(matrix);
+    REQUIRE((result(1, 1) >= 0) == true);
+}

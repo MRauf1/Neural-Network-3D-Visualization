@@ -31,4 +31,7 @@
 -Began working on the Neural Network\
 -Implemented the constructor\
 -Implemented the getters\
--Implemented the method for initializing weights and biases of the Neural Network
+-Implemented the method for initializing weights and biases of the Neural Network\
+-Implemented the element Sigmoid function\
+-Implemented the matrix Sigmoid function\
+-Tested both of the Sigmoid functions
