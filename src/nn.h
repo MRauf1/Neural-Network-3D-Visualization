@@ -41,4 +41,6 @@ class NN {
 
         MatrixXd ApplySigmoid(MatrixXd current_matrix);
 
+        double MSE(std::vector<int> labels, std::vector<MatrixXd> predictions);
+
 };

@@ -36,4 +36,6 @@
 -Implemented the matrix Sigmoid function\
 -Tested both of the Sigmoid functions\
 -Programmed the Feedforward portion of the Network\
--Partially tested the Feedforward method
+-Partially tested the Feedforward method\
+-Implemented the Mean Squared Error function\
+-Tested the MSE function

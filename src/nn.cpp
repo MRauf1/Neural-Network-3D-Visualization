@@ -59,3 +59,18 @@ double NN::Sigmoid(double num) {
 MatrixXd NN::ApplySigmoid(MatrixXd matrix) {
     return matrix.unaryExpr(&Sigmoid);
 }
+
+double NN::MSE(std::vector<int> labels, std::vector<MatrixXd> predictions) {
+
+    double error = 0;
+
+    // Go through all predictions
+    for(int index = 0; index < predictions.size(); index++) {
+        error += pow((labels.at(index) - predictions.at(index)(0, 0)), 2);
+    }
+
+    // Get the average and return
+    error /= (2.0 * predictions.size());
+    return error;
+
+}

@@ -75,3 +75,15 @@ TEST_CASE("Check the ApplySigmoid") {
     MatrixXd result = simple_test_nn.ApplySigmoid(matrix);
     REQUIRE((result(1, 1) >= 0) == true);
 }
+
+// Check MSE method
+TEST_CASE("Check the MSE method") {
+    std::vector<int> labels = {0, 1};
+    MatrixXd prediction_one(1, 1);
+    prediction_one << 0.3;
+    MatrixXd prediction_two(1, 1);
+    prediction_two << 0.9;
+    std::vector<MatrixXd> predictions = {prediction_one, prediction_two};
+    double error = simple_test_nn.MSE(labels, predictions);
+    REQUIRE((error > 0.024 && error < 0.026) == true);
+}
