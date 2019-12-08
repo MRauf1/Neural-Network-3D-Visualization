@@ -73,6 +73,10 @@ MatrixXd NN::ApplySigmoid(MatrixXd matrix) {
     return matrix.unaryExpr(&Sigmoid);
 }
 
+MatrixXd NN::ApplySigmoidDerivative(MatrixXd matrix) {
+    return matrix.unaryExpr(&SigmoidDerivative);
+}
+
 double NN::MSE(std::vector<int> labels, std::vector<MatrixXd> predictions) {
 
     double error = 0;
@@ -97,7 +101,30 @@ MatrixXd NN::MSEDerivative(int label, MatrixXd prediction) {
 //void NN::Backpropagation() {
 
 //}
+/*
+void NN::CalculateErrors(int label, MatrixXd prediction) {
 
-//void NN::CalculateErrors() {
+    int layer_iterator = this->history.size() - 1;
 
-//}
+    // Calculate dC with respect to the output and
+    // calculate the derivative of the last activation layer
+    MatrixXd loss_gradient = MSEDerivative(label, prediction);
+    MatrixXd output_layer_history = this->history.at(layer_iterator);
+    layer_iterator--;
+    MatrixXd sigmoid_derivative_vector(1, 1);
+    sigmoid_derivative_vector(0, 0) = SigmoidDerivative(output_layer_history(0, 0));
+
+    // Calculate the error of the last layer
+    MatrixXd output_layer_error = loss_gradient.cwiseProduct(sigmoid_derivative_vector);
+
+    // Calculate the error for the rest of the layers (except for input layer)
+    for(int layer = layer_iterator; layer > 0; layer--) {
+        // NOTE: I LEFT HERE
+        MatrixXd layer_history = this->history.at(layer_iterator);
+        MatrixXd sigmoid_derivative_vector(, 1);
+        sigmoid_derivative_vector(0, 0) = SigmoidDerivative(output_layer_history(0, 0));
+
+    }
+
+}
+*/

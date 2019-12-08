@@ -49,4 +49,6 @@
 
 **12/7/19**
 -Coded the function for computing the derivative of the loss function\
--Tested the loss derivative 
+-Tested the loss derivative\
+-Coded the function for applying the sigmoid derivative over the whole matrix
+-Tested the sigmoid derivative function 

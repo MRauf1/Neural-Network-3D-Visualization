@@ -112,6 +112,14 @@ TEST_CASE("Check the ApplySigmoid") {
     REQUIRE((result(1, 1) >= 0) == true);
 }
 
+// Check ApplySigmoidDerivative method
+// Checked this manually too
+TEST_CASE("Check the ApplySigmoidDerivative") {
+    MatrixXd matrix = MatrixXd::Random(4, 1);
+    MatrixXd result = simple_test_nn.ApplySigmoidDerivative(matrix);
+    REQUIRE((result(0, 0) >= 0) == true);
+}
+
 // Check MSE method
 TEST_CASE("Check the MSE method") {
     std::vector<int> labels = {0, 1};
