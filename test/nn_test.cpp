@@ -123,3 +123,15 @@ TEST_CASE("Check the MSE method") {
     double error = simple_test_nn.MSE(labels, predictions);
     REQUIRE((error > 0.024 && error < 0.026) == true);
 }
+
+// Check MSEDerivative method
+TEST_CASE("Check the MSEDerivative method") {
+    int label = 1;
+    MatrixXd prediction(1, 1);
+    prediction << 0.3;
+    MatrixXd error_derivative = simple_test_nn.MSEDerivative(label, prediction);
+    double value = error_derivative(0, 0);
+    REQUIRE(error_derivative.rows() == 1);
+    REQUIRE(error_derivative.cols() == 1);
+    REQUIRE((value < -0.69 && value > -0.71) == true);
+}

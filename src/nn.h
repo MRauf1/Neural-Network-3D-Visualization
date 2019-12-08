@@ -20,6 +20,7 @@ class NN {
         std::vector<MatrixXd> biases;
         MatrixXd current_matrix;
         std::vector<MatrixXd> history;
+        double learning_rate;
 
 
     public:
@@ -49,5 +50,7 @@ class NN {
         MatrixXd ApplySigmoid(MatrixXd current_matrix);
 
         double MSE(std::vector<int> labels, std::vector<MatrixXd> predictions);
+
+        MatrixXd MSEDerivative(int label, MatrixXd prediction);
 
 };

@@ -87,3 +87,17 @@ double NN::MSE(std::vector<int> labels, std::vector<MatrixXd> predictions) {
     return error;
 
 }
+
+MatrixXd NN::MSEDerivative(int label, MatrixXd prediction) {
+    MatrixXd output(1, 1);
+    output(0, 0) = prediction(0, 0) - label;
+    return output;
+}
+
+//void NN::Backpropagation() {
+
+//}
+
+//void NN::CalculateErrors() {
+
+//}

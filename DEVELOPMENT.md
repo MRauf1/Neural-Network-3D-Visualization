@@ -45,4 +45,8 @@
 -Tested the Sigmoid derivative\
 -Added code for storing the history for backpropagation\
 -Tested the new code\
--Added the helper method for clearing the history 
+-Added the helper method for clearing the history
+
+**12/7/19**
+-Coded the function for computing the derivative of the loss function\
+-Tested the loss derivative 
