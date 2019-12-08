@@ -39,3 +39,7 @@
 -Partially tested the Feedforward method\
 -Implemented the Mean Squared Error function\
 -Tested the MSE function
+
+**12/6/19**\
+-Coded the function for calculating the derivative of Sigmoid\
+-Tested the Sigmoid derivative

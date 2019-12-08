@@ -39,6 +39,8 @@ class NN {
 
         double static Sigmoid(double num);
 
+        double SigmoidDerivative(double num);
+
         MatrixXd ApplySigmoid(MatrixXd current_matrix);
 
         double MSE(std::vector<int> labels, std::vector<MatrixXd> predictions);

@@ -56,6 +56,10 @@ double NN::Sigmoid(double num) {
     return (1.0 / (1.0 + exp(-num)));
 }
 
+double NN::SigmoidDerivative(double num) {
+    return (Sigmoid(num) * (1 - Sigmoid(num)));
+}
+
 MatrixXd NN::ApplySigmoid(MatrixXd matrix) {
     return matrix.unaryExpr(&Sigmoid);
 }

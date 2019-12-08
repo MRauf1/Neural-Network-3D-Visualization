@@ -68,6 +68,13 @@ TEST_CASE("Check the Sigmoid") {
     REQUIRE((result > 0.97 && result < 0.98) == true);
 }
 
+// Check SigmoidDerivative method
+TEST_CASE("Check the SigmoidDerivative") {
+    double num = 3.5;
+    double result = simple_test_nn.SigmoidDerivative(num);
+    REQUIRE((result > 0.028 && result < 0.029) == true);
+}
+
 // Check ApplySigmoid method
 // Checked this manually too
 TEST_CASE("Check the ApplySigmoid") {
