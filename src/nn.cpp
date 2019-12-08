@@ -24,6 +24,14 @@ std::vector<MatrixXd> NN::GetBiases() {
     return this->biases;
 }
 
+std::vector<MatrixXd> NN::GetHistory() {
+    return this->history;
+}
+
+void NN::ClearHistory() {
+    this->history.clear();
+}
+
 void NN::InitializeWeightsBiases(std::vector<int> neurons) {
 
     // Initialize for every layer
@@ -44,6 +52,7 @@ MatrixXd NN::Feedforward(MatrixXd matrix) {
         MatrixXd weight = this->weights.at(layer);
         MatrixXd bias = this->biases.at(layer);
         matrix = weight * matrix + bias;
+        this->history.push_back(matrix); //***Clear in Backprop
         matrix = ApplySigmoid(matrix);
     }
 

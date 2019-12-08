@@ -19,6 +19,7 @@ class NN {
         std::vector<MatrixXd> weights;
         std::vector<MatrixXd> biases;
         MatrixXd current_matrix;
+        std::vector<MatrixXd> history;
 
 
     public:
@@ -32,6 +33,10 @@ class NN {
         std::vector<MatrixXd> GetWeights();
 
         std::vector<MatrixXd> GetBiases();
+
+        std::vector<MatrixXd> GetHistory();
+
+        void ClearHistory();
 
         void InitializeWeightsBiases(std::vector<int> neurons);
 

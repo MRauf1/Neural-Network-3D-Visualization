@@ -42,4 +42,7 @@
 
 **12/6/19**\
 -Coded the function for calculating the derivative of Sigmoid\
--Tested the Sigmoid derivative
+-Tested the Sigmoid derivative\
+-Added code for storing the history for backpropagation\
+-Tested the new code\
+-Added the helper method for clearing the history 

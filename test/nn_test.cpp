@@ -59,6 +59,35 @@ TEST_CASE("Check matrix size after Feedforward") {
     MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
     REQUIRE(result.rows() == 3);
     REQUIRE(result.cols() == 1);
+    simple_test_nn.ClearHistory();
+}
+
+TEST_CASE("Check history size after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    std::vector<MatrixXd> history = simple_test_nn.GetHistory();
+    REQUIRE(history.size() == 2);
+    simple_test_nn.ClearHistory();
+}
+
+TEST_CASE("Check hidden layer history after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    std::vector<MatrixXd> history = simple_test_nn.GetHistory();
+    MatrixXd hidden_layer_history = history.at(0);
+    REQUIRE(hidden_layer_history.rows() == 2);
+    REQUIRE(hidden_layer_history.cols() == 1);
+    simple_test_nn.ClearHistory();
+}
+
+TEST_CASE("Check output layer history after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    std::vector<MatrixXd> history = simple_test_nn.GetHistory();
+    MatrixXd output_layer_history = history.at(1);
+    REQUIRE(output_layer_history.rows() == 3);
+    REQUIRE(output_layer_history.cols() == 1);
+    simple_test_nn.ClearHistory();
 }
 
 // Check Sigmoid method
