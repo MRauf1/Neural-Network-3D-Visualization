@@ -32,6 +32,14 @@ void NN::ClearHistory() {
     this->history.clear();
 }
 
+std::vector<MatrixXd> NN::GetActivationHistory() {
+    return this->activation_history;
+}
+
+void NN::ClearActivationHistory() {
+    this->activation_history.clear();
+}
+
 void NN::InitializeWeightsBiases(std::vector<int> neurons) {
 
     // Initialize for every layer
@@ -48,12 +56,17 @@ void NN::InitializeWeightsBiases(std::vector<int> neurons) {
 
 MatrixXd NN::Feedforward(MatrixXd matrix) {
 
+    // Store input for backpropagation
+    this->activation_history.push_back(matrix);
+
+    // Pass the input through every layer
     for(int layer = 0; layer < (this->layers - 1); layer++) {
         MatrixXd weight = this->weights.at(layer);
         MatrixXd bias = this->biases.at(layer);
         matrix = weight * matrix + bias;
         this->history.push_back(matrix); //***Clear in Backprop
         matrix = ApplySigmoid(matrix);
+        this->activation_history.push_back(matrix);
     }
 
     this->current_matrix = matrix;
@@ -101,30 +114,65 @@ MatrixXd NN::MSEDerivative(int label, MatrixXd prediction) {
 //void NN::Backpropagation() {
 
 //}
-/*
-void NN::CalculateErrors(int label, MatrixXd prediction) {
 
+// NEEDS REFACTORING
+std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int label, MatrixXd prediction) {
+
+    std::vector<MatrixXd> weight_change(this->weights.size());
+    std::vector<MatrixXd> bias_change(this->biases.size());
+
+    // Layers are in backward order (last layer is first)
+    std::vector<MatrixXd> layer_errors;
     int layer_iterator = this->history.size() - 1;
 
-    // Calculate dC with respect to the output and
-    // calculate the derivative of the last activation layer
+    // Calculate dC with respect to the output
     MatrixXd loss_gradient = MSEDerivative(label, prediction);
+
+    // Calculate the derivative of the last activation layer
     MatrixXd output_layer_history = this->history.at(layer_iterator);
-    layer_iterator--;
-    MatrixXd sigmoid_derivative_vector(1, 1);
-    sigmoid_derivative_vector(0, 0) = SigmoidDerivative(output_layer_history(0, 0));
+    MatrixXd sigmoid_derivative_vector = ApplySigmoidDerivative(output_layer_history);
 
     // Calculate the error of the last layer
     MatrixXd output_layer_error = loss_gradient.cwiseProduct(sigmoid_derivative_vector);
+    layer_errors.push_back(output_layer_error);
+
+    // Update the last weights and bias
+    MatrixXd temp_weight = output_layer_error * this->activation_history.at(layer_iterator).transpose();
+    MatrixXd temp_bias = output_layer_error;
+    weight_change.at(layer_iterator) = temp_weight;
+    bias_change.at(layer_iterator) = temp_bias;
+
+    int layer_errors_iterator = 0;
 
     // Calculate the error for the rest of the layers (except for input layer)
     for(int layer = layer_iterator; layer > 0; layer--) {
-        // NOTE: I LEFT HERE
-        MatrixXd layer_history = this->history.at(layer_iterator);
-        MatrixXd sigmoid_derivative_vector(, 1);
-        sigmoid_derivative_vector(0, 0) = SigmoidDerivative(output_layer_history(0, 0));
+
+        // Retrieve the necessary data
+        MatrixXd transposed_weight = this->weights.at(layer).transpose();
+        MatrixXd next_layer_error = layer_errors.at(layer_errors_iterator);
+        layer_errors_iterator++;
+
+        // Compute the error
+        MatrixXd layer_error = transposed_weight * next_layer_error;
+
+        // Calculate the derivative of the layer
+        MatrixXd layer_history = this->history.at(layer - 1);
+        MatrixXd sigmoid_derivative_vector = ApplySigmoidDerivative(layer_history);
+
+        // Calculate the final error
+        MatrixXd final_error = layer_error.cwiseProduct(sigmoid_derivative_vector);
+        layer_errors.push_back(final_error);
+
+        // Update the weights and bias
+        MatrixXd temp_weight = final_error * this->activation_history.at(layer - 1).transpose();
+        MatrixXd temp_bias = final_error;
+        weight_change.at(layer - 1) = temp_weight;
+        bias_change.at(layer - 1) = temp_bias;
 
     }
 
+    std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> changes = {weight_change, bias_change};
+
+    return changes;
+
 }
-*/

@@ -50,5 +50,8 @@
 **12/7/19**
 -Coded the function for computing the derivative of the loss function\
 -Tested the loss derivative\
--Coded the function for applying the sigmoid derivative over the whole matrix
--Tested the sigmoid derivative function 
+-Coded the function for applying the sigmoid derivative over the whole matrix\
+-Tested the sigmoid derivative function\
+-Added a variable for keeping track of activation history\
+-Modified Feedforward to update the activation history\
+-Wrapped up with the CalculateErrors method, which is used to find the desired changes to the weights and biases

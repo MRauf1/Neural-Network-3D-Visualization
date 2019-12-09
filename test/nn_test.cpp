@@ -7,6 +7,9 @@ using Eigen::MatrixXd;
 std::vector<int> neurons = {3, 2, 3};
 NN simple_test_nn(neurons);
 
+std::vector<int> neurons_two = {3, 2, 1};
+NN nn_two(neurons_two);
+
 // Testing InitializeWeightsBiases
 TEST_CASE("Check the weights vector size") {
     std::vector<MatrixXd> weights = simple_test_nn.GetWeights();
@@ -60,14 +63,17 @@ TEST_CASE("Check matrix size after Feedforward") {
     REQUIRE(result.rows() == 3);
     REQUIRE(result.cols() == 1);
     simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
 }
 
+// Check history
 TEST_CASE("Check history size after Feedforward") {
     MatrixXd sample_matrix = MatrixXd::Random(3, 1);
     MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
     std::vector<MatrixXd> history = simple_test_nn.GetHistory();
     REQUIRE(history.size() == 2);
     simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
 }
 
 TEST_CASE("Check hidden layer history after Feedforward") {
@@ -78,6 +84,7 @@ TEST_CASE("Check hidden layer history after Feedforward") {
     REQUIRE(hidden_layer_history.rows() == 2);
     REQUIRE(hidden_layer_history.cols() == 1);
     simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
 }
 
 TEST_CASE("Check output layer history after Feedforward") {
@@ -88,6 +95,50 @@ TEST_CASE("Check output layer history after Feedforward") {
     REQUIRE(output_layer_history.rows() == 3);
     REQUIRE(output_layer_history.cols() == 1);
     simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
+}
+
+// Check activation_history
+TEST_CASE("Check activation history size after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    std::vector<MatrixXd> activation_history = simple_test_nn.GetActivationHistory();
+    REQUIRE(activation_history.size() == 3);
+    simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
+}
+
+TEST_CASE("Check activation history of input layer after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    std::vector<MatrixXd> activation_history = simple_test_nn.GetActivationHistory();
+    MatrixXd activation = activation_history.at(0);
+    REQUIRE(activation.rows() == 3);
+    REQUIRE(activation.cols() == 1);
+    simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
+}
+
+TEST_CASE("Check activation history of hidden layer after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    std::vector<MatrixXd> activation_history = simple_test_nn.GetActivationHistory();
+    MatrixXd activation = activation_history.at(1);
+    REQUIRE(activation.rows() == 2);
+    REQUIRE(activation.cols() == 1);
+    simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
+}
+
+TEST_CASE("Check activation history of output layer after Feedforward") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
+    std::vector<MatrixXd> activation_history = simple_test_nn.GetActivationHistory();
+    MatrixXd activation = activation_history.at(2);
+    REQUIRE(activation.rows() == 3);
+    REQUIRE(activation.cols() == 1);
+    simple_test_nn.ClearHistory();
+    simple_test_nn.ClearActivationHistory();
 }
 
 // Check Sigmoid method
@@ -142,4 +193,13 @@ TEST_CASE("Check the MSEDerivative method") {
     REQUIRE(error_derivative.rows() == 1);
     REQUIRE(error_derivative.cols() == 1);
     REQUIRE((value < -0.69 && value > -0.71) == true);
+}
+
+// Check CalculateErrors method
+TEST_CASE("Check the error of output layer") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = nn_two.Feedforward(sample_matrix);
+    int label = 1;
+    nn_two.CalculateErrors(label, result);
+    nn_two.ClearHistory();
 }
