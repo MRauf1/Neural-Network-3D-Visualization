@@ -5,6 +5,7 @@
 #include <string>
 #include <cmath>
 #include <iostream>
+#include <random>
 
 using Eigen::MatrixXd;
 
@@ -26,7 +27,7 @@ class NN {
 
     public:
 
-        NN(std::vector<int> neurons);
+        NN(std::vector<int> neurons, double learning_rate);
 
         int GetLayers();
 
@@ -60,6 +61,10 @@ class NN {
 
         MatrixXd MSEDerivative(int label, MatrixXd prediction);
 
+        void Backpropagation(int label, MatrixXd prediction);
+
         std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> CalculateErrors(int label, MatrixXd prediction);
+
+        void Train(int epochs, std::vector<MatrixXd> images, std::vector<int> labels);
 
 };

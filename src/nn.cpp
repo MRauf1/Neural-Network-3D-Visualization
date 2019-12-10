@@ -2,10 +2,11 @@
 
 using Eigen::MatrixXd;
 
-NN::NN(std::vector<int> neurons) {
+NN::NN(std::vector<int> neurons, double learning_rate) {
     this->layers = neurons.size();
     this->neurons = neurons;
     InitializeWeightsBiases(neurons);
+    this->learning_rate = learning_rate;
 }
 
 int NN::GetLayers() {
@@ -58,17 +59,22 @@ MatrixXd NN::Feedforward(MatrixXd matrix) {
 
     // Store input for backpropagation
     this->activation_history.push_back(matrix);
-
+    //std::cout << "Start Feedforward" << std::endl;
     // Pass the input through every layer
     for(int layer = 0; layer < (this->layers - 1); layer++) {
         MatrixXd weight = this->weights.at(layer);
         MatrixXd bias = this->biases.at(layer);
+        //std::cout << matrix.rows() << std::endl;
+        //std::cout << matrix.cols() << std::endl;
+        //std::cout << "Finish matrix" << std::endl;
+        //std::cout << weight.rows() << std::endl;
+        //std::cout << weight.cols() << std::endl;
         matrix = weight * matrix + bias;
         this->history.push_back(matrix); //***Clear in Backprop
         matrix = ApplySigmoid(matrix);
         this->activation_history.push_back(matrix);
     }
-
+    //std::cout << "Finish Feedforward" << std::endl;
     this->current_matrix = matrix;
     return matrix;
 
@@ -111,13 +117,29 @@ MatrixXd NN::MSEDerivative(int label, MatrixXd prediction) {
     return output;
 }
 
-//void NN::Backpropagation() {
+void NN::Backpropagation(int label, MatrixXd prediction) {
+    //std::cout << "Start backpropagation" << std::endl;
+    // Retrieve the changes
+    std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> changes = CalculateErrors(label, prediction);
+    std::vector<MatrixXd> weight_change = changes.first;
+    std::vector<MatrixXd> bias_change = changes.second;
 
-//}
+    // Go through each layer and update every weight and bias
+    for(int layer = 0; layer < this->weights.size(); layer++) {
+
+        this->weights.at(layer) -= (learning_rate * weight_change.at(layer));
+        this->biases.at(layer) -= (learning_rate * bias_change.at(layer));
+
+    }
+    //std::cout << "End backpropagation" << std::endl;
+    ClearHistory();
+    ClearActivationHistory();
+
+}
 
 // NEEDS REFACTORING
 std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int label, MatrixXd prediction) {
-
+    //std::cout << "Start calc" << std::endl;
     std::vector<MatrixXd> weight_change(this->weights.size());
     std::vector<MatrixXd> bias_change(this->biases.size());
 
@@ -170,9 +192,52 @@ std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int 
         bias_change.at(layer - 1) = temp_bias;
 
     }
-
+    //std::cout << "End calc" << std::endl;
     std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> changes = {weight_change, bias_change};
 
     return changes;
+
+}
+
+void NN::Train(int epochs, std::vector<MatrixXd> images, std::vector<int> labels) {
+
+    int seed = 1;
+
+    // TEST THIS
+    shuffle(images.begin(), images.end(), std::default_random_engine(seed));
+    shuffle(labels.begin(), labels.end(), std::default_random_engine(seed));
+
+    for(int epoch = 0; epoch < epochs; epoch++) {
+
+        std::cout << "Epoch: " << epoch << std::endl;
+        double error_total = 0;
+        double accuracy = 0;
+
+        for(int image_num = 0; image_num < images.size(); image_num++) {
+
+            MatrixXd prediction = Feedforward(images.at(image_num));
+            std::vector<int> label = {labels.at(image_num)};
+            std::vector<MatrixXd> prediction_two = {prediction};
+
+            error_total += MSE(label, prediction_two);
+            double error_average = (error_total / (image_num + 1));
+            std::cout << "Image: " << image_num << " Error: " << error_average << std::endl;
+
+            if((prediction(0, 0) >= 0.50 && prediction(0, 0) < 1 && label.at(0) == 1) ||
+                (prediction(0, 0) >= 0 && prediction(0, 0) < 0.50 && label.at(0) == 0)) {
+                accuracy += 1;
+            }
+
+            double accuracy_average = (accuracy / (image_num + 1));
+            std::cout << "Accuracy: " << accuracy_average << std::endl;
+
+            Backpropagation(labels.at(image_num), prediction);
+
+        }
+
+        error_total = 0;
+        accuracy = 0;
+
+    }
 
 }

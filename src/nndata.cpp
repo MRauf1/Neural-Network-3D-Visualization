@@ -2,7 +2,7 @@
 
 using namespace cv;
 using Eigen::MatrixXd;
-namespace filesystem = std::experimental::filesystem;
+//namespace filesystem = std::experimental::filesystem;
 
 NNData::NNData() {
 
@@ -14,7 +14,7 @@ std::pair<std::vector<Mat>, std::vector<int>> NNData::LoadFromDirectory(std::str
     std::vector<int> image_labels;
 
     // Go through all images in the directory
-    for(auto &file_path : filesystem::directory_iterator(dir_path)) {
+    for(auto &file_path : std::experimental::filesystem::directory_iterator(dir_path)) {
 
         // Retrieve the image and resize it
         Mat image = imread(file_path.path().string());
@@ -45,6 +45,8 @@ int NNData::DogOrCat(std::string file_name) {
     } else if(file_name.substr(0, kLabelLength).compare(kCatInFileName) == 0) {
         return 0;
     }
+
+    return -1;
 
 }
 

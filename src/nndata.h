@@ -19,7 +19,7 @@ class NNData {
         std::string kDogInFileName = "dog";
         std::string kCatInFileName = "cat";
         int kLabelLength = 3;
-        int kImageSize = 100;
+        int kImageSize = 32;
         int kChannels = 3;
         int kNumPixels = kImageSize * kImageSize * kChannels;
         double kMaxPixelValue = 255.0;

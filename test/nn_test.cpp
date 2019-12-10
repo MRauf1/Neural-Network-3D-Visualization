@@ -5,10 +5,10 @@
 using Eigen::MatrixXd;
 
 std::vector<int> neurons = {3, 2, 3};
-NN simple_test_nn(neurons);
+NN simple_test_nn(neurons, 0.1);
 
 std::vector<int> neurons_two = {3, 2, 1};
-NN nn_two(neurons_two);
+NN nn_two(neurons_two, 0.1);
 
 // Testing InitializeWeightsBiases
 TEST_CASE("Check the weights vector size") {
@@ -196,10 +196,21 @@ TEST_CASE("Check the MSEDerivative method") {
 }
 
 // Check CalculateErrors method
+// NOT FINISHED
 TEST_CASE("Check the error of output layer") {
     MatrixXd sample_matrix = MatrixXd::Random(3, 1);
     MatrixXd result = nn_two.Feedforward(sample_matrix);
     int label = 1;
     nn_two.CalculateErrors(label, result);
     nn_two.ClearHistory();
+    nn_two.ClearActivationHistory();
+}
+
+// Check Backpropagation method
+// NOT FINISHED
+TEST_CASE("Check the error of output layer 2") {
+    MatrixXd sample_matrix = MatrixXd::Random(3, 1);
+    MatrixXd result = nn_two.Feedforward(sample_matrix);
+    int label = 1;
+    nn_two.Backpropagation(label, result);
 }
