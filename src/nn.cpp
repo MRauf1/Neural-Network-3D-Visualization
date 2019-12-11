@@ -59,22 +59,22 @@ MatrixXd NN::Feedforward(MatrixXd matrix) {
 
     // Store input for backpropagation
     this->activation_history.push_back(matrix);
-    //std::cout << "Start Feedforward" << std::endl;
+
     // Pass the input through every layer
     for(int layer = 0; layer < (this->layers - 1); layer++) {
+
+        // Retrieve the necessary weights and biases
         MatrixXd weight = this->weights.at(layer);
         MatrixXd bias = this->biases.at(layer);
-        //std::cout << matrix.rows() << std::endl;
-        //std::cout << matrix.cols() << std::endl;
-        //std::cout << "Finish matrix" << std::endl;
-        //std::cout << weight.rows() << std::endl;
-        //std::cout << weight.cols() << std::endl;
+
+        // Calculate the output and store the necessary calculations
         matrix = weight * matrix + bias;
-        this->history.push_back(matrix); //***Clear in Backprop
+        this->history.push_back(matrix);
         matrix = ApplySigmoid(matrix);
         this->activation_history.push_back(matrix);
+
     }
-    //std::cout << "Finish Feedforward" << std::endl;
+
     this->current_matrix = matrix;
     return matrix;
 
@@ -118,7 +118,7 @@ MatrixXd NN::MSEDerivative(int label, MatrixXd prediction) {
 }
 
 void NN::Backpropagation(int label, MatrixXd prediction) {
-    //std::cout << "Start backpropagation" << std::endl;
+
     // Retrieve the changes
     std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> changes = CalculateErrors(label, prediction);
     std::vector<MatrixXd> weight_change = changes.first;
@@ -131,7 +131,7 @@ void NN::Backpropagation(int label, MatrixXd prediction) {
         this->biases.at(layer) -= (learning_rate * bias_change.at(layer));
 
     }
-    //std::cout << "End backpropagation" << std::endl;
+
     ClearHistory();
     ClearActivationHistory();
 
@@ -139,7 +139,7 @@ void NN::Backpropagation(int label, MatrixXd prediction) {
 
 // NEEDS REFACTORING
 std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int label, MatrixXd prediction) {
-    //std::cout << "Start calc" << std::endl;
+
     std::vector<MatrixXd> weight_change(this->weights.size());
     std::vector<MatrixXd> bias_change(this->biases.size());
 
@@ -192,7 +192,7 @@ std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int 
         bias_change.at(layer - 1) = temp_bias;
 
     }
-    //std::cout << "End calc" << std::endl;
+
     std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> changes = {weight_change, bias_change};
 
     return changes;
@@ -201,18 +201,19 @@ std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int 
 
 void NN::Train(int epochs, std::vector<MatrixXd> images, std::vector<int> labels) {
 
+    // Shuffle the images and the labels
     int seed = 1;
-
-    // TEST THIS
     shuffle(images.begin(), images.end(), std::default_random_engine(seed));
     shuffle(labels.begin(), labels.end(), std::default_random_engine(seed));
 
+    // Train the model for the defined number of epochs
     for(int epoch = 0; epoch < epochs; epoch++) {
 
         std::cout << "Epoch: " << epoch << std::endl;
         double error_total = 0;
         double accuracy = 0;
 
+        // For each epoch, train on every available image
         for(int image_num = 0; image_num < images.size(); image_num++) {
 
             MatrixXd prediction = Feedforward(images.at(image_num));
@@ -223,8 +224,8 @@ void NN::Train(int epochs, std::vector<MatrixXd> images, std::vector<int> labels
             double error_average = (error_total / (image_num + 1));
             std::cout << "Image: " << image_num << " Error: " << error_average << std::endl;
 
-            if((prediction(0, 0) >= 0.50 && prediction(0, 0) < 1 && label.at(0) == 1) ||
-                (prediction(0, 0) >= 0 && prediction(0, 0) < 0.50 && label.at(0) == 0)) {
+            if((prediction(0, 0) >= threshold && label.at(0) == 1) ||
+                (prediction(0, 0) < threshold && label.at(0) == 0)) {
                 accuracy += 1;
             }
 
@@ -239,5 +240,134 @@ void NN::Train(int epochs, std::vector<MatrixXd> images, std::vector<int> labels
         accuracy = 0;
 
     }
+
+}
+
+double NN::Evaluate(std::vector<MatrixXd> images, std::vector<int> labels) {
+
+    double accuracy = 0;
+
+    // Go through every image
+    for(int image_num = 0; image_num < images.size(); image_num++) {
+
+        std::cout << "Image Number: " << image_num << std::endl;
+
+        // Get the prediction and the label
+        MatrixXd prediction = Feedforward(images.at(image_num));
+        std::vector<int> label = {labels.at(image_num)};
+
+        // Check if the image was predicted correctly
+        if((prediction(0, 0) >= threshold && label.at(0) == 1) ||
+            (prediction(0, 0) < threshold && label.at(0) == 0)) {
+            accuracy += 1;
+        }
+
+    }
+
+    return (accuracy / (images.size()));
+
+}
+
+void NN::SaveModel() {
+
+    // Go through all layers
+    for(int num = 0; num < this->weights.size(); num++) {
+
+        // Save the weights
+        std::string weight_file_name = kModelFolderPath + "weight_" + std::to_string(num) + ".txt";
+        std::ofstream weight_file(weight_file_name);
+        MatrixXd weight = this->weights.at(num);
+
+        if(weight_file.is_open()) {
+            weight_file << weight;
+        }
+
+        // Save the biases
+        std::string bias_file_name = kModelFolderPath + "bias_" + std::to_string(num) + ".txt";
+        std::ofstream bias_file(bias_file_name);
+        MatrixXd bias = this->biases.at(num);
+
+        if(bias_file.is_open()) {
+            bias_file << bias;
+        }
+
+    }
+
+}
+
+// NEEDS REFACTORING
+void NN::LoadModel() {
+
+    std::vector<MatrixXd> temp_weights(this->layers - 1);
+    std::vector<MatrixXd> temp_biases(this->layers - 1);
+
+    // Go through all images in the directory
+    for(auto &file_path : std::experimental::filesystem::directory_iterator(kModelFolderPath)) {
+
+        std::cout << file_path.path().string() << std::endl;
+
+        // Get the file and initialize the necessary variables
+        std::string file_name = file_path.path().string();
+        std::ifstream file(file_name);
+        std::string file_content;
+        std::string line;
+        std::vector<std::string> result;
+        std::regex regex("\\s+");
+
+        // Get the needed values for later storing the matrices in correct order
+        bool is_weight = (file_name.substr(18, 6).compare("weight") == 0);
+        std::regex num_regex("\\d+");
+        std::smatch num_regex_result;
+        std::regex_search(file_name, num_regex_result, num_regex);
+        int index = std::stoi(num_regex_result[0]);
+
+        // Initialize the matrix for storing the data
+        MatrixXd matrix;
+
+        if(is_weight) {
+            matrix.resize(this->weights.at(index).rows(), this->weights.at(index).cols());
+        } else {
+            matrix.resize(this->biases.at(index).rows(), this->biases.at(index).cols());
+        }
+
+
+        int row = 0;
+
+        if(file.is_open()) {
+
+            while(getline(file,line)) {
+
+                // Remove leading, trailing, extra spaces
+                line = std::regex_replace(line, std::regex("^ +| +$|( ) +"), "$1");
+                std::sregex_token_iterator iterator(line.begin(), line.end(), regex, -1);
+                std::sregex_token_iterator end;
+
+                int col = 0;
+
+                // Add the columns to the matrix
+                while(iterator != end) {
+                    matrix(row, col) = std::stod((*iterator));
+                    ++iterator;
+                    col++;
+                }
+
+                row++;
+
+            }
+
+            file.close();
+
+        }
+
+        if(is_weight) {
+            temp_weights.at(index) = matrix;
+        } else {
+            temp_biases.at(index) = matrix;
+        }
+
+    }
+
+    this->weights = temp_weights;
+    this->biases = temp_biases;
 
 }
