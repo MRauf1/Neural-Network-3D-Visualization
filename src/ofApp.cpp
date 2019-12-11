@@ -27,7 +27,7 @@ void ofApp::setup(){
     ofEnableDepthTest();
     ofSetVerticalSync(true);
 
-    camera.setPosition(0, 0, 300);
+    camera.setPosition(500, 500, 1500);
 
 
 }
@@ -42,15 +42,9 @@ void ofApp::draw(){
 
     camera.begin();
 
-    /*
-    ofFill();
-    ofSetColor(255, 0, 0, 255);
-    ofDrawRectangle(0, 0, 0, 30, 30);
-    */
-
-    //test.draw(0, 0, 32, 32);
-
+    nn_visualization.PassFeedForward();
     nn_visualization.DrawImage();
+    nn_visualization.DrawAllLayers();
 
     camera.end();
 
