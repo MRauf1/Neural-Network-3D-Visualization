@@ -7,7 +7,6 @@
 using namespace cv;
 using Eigen::MatrixXd;
 
-//int kImageSize = 100;
 int kImageSize = 32;
 int kChannels = 3;
 int kNumTrain = 15000;

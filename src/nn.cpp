@@ -2,6 +2,10 @@
 
 using Eigen::MatrixXd;
 
+NN::NN() {
+
+}
+
 NN::NN(std::vector<int> neurons, double learning_rate) {
     this->layers = neurons.size();
     this->neurons = neurons;
@@ -315,7 +319,7 @@ void NN::LoadModel() {
         std::regex regex("\\s+");
 
         // Get the needed values for later storing the matrices in correct order
-        bool is_weight = (file_name.substr(18, 6).compare("weight") == 0);
+        bool is_weight = (file_name.substr(11, 6).compare("weight") == 0);
         std::regex num_regex("\\d+");
         std::smatch num_regex_result;
         std::regex_search(file_name, num_regex_result, num_regex);
@@ -329,7 +333,6 @@ void NN::LoadModel() {
         } else {
             matrix.resize(this->biases.at(index).rows(), this->biases.at(index).cols());
         }
-
 
         int row = 0;
 

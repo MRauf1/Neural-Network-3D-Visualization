@@ -5,14 +5,30 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+    std::cout << "Started preprocessing data" << std::endl;
+
     NNData data;
+    std::pair<std::vector<Mat>, std::vector<int>> validation_data = data.LoadFromDirectory("../bin/data/validation");
+    std::vector<Mat> reshaped_data = data.ConvertTo1D(validation_data.first);
+    std::vector<MatrixXd> images = data.ConvertToEigen(reshaped_data);
+    images = data.Preprocess(images);
+    std::vector<std::string> image_paths = data.GetImagePaths();
+
+    std::cout << "Finished preprocessing data" << std::endl;
+    std::cout << "Started loading the model" << std::endl;
+
+    NN nn(kNeurons, 0.01);
+    nn.LoadModel();
+
+    std::cout << "Finished loading the model" << std::endl;
+
+    nn_visualization.Initialize(image_paths, images, validation_data.second, nn);
 
     ofEnableDepthTest();
     ofSetVerticalSync(true);
 
-    camera.setPosition(0, 0, 100);
+    camera.setPosition(0, 0, 300);
 
-    test.load("data/test/cat.10000.jpg");
 
 }
 
@@ -32,7 +48,9 @@ void ofApp::draw(){
     ofDrawRectangle(0, 0, 0, 30, 30);
     */
 
-    test.draw(0, 0, 32, 32);
+    //test.draw(0, 0, 32, 32);
+
+    nn_visualization.DrawImage();
 
     camera.end();
 
@@ -50,6 +68,10 @@ void ofApp::keyPressed(int key){
         camera.move(0, -kCameraSpeed, 0);
     } else if(key == 'd') {
         camera.move(kCameraSpeed, 0, 0);
+    } else if(key == 'q') {
+        camera.move(0, 0, -kCameraSpeed);
+    } else if(key == 'e') {
+        camera.move(0, 0, kCameraSpeed);
     }
 
 }

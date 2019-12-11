@@ -8,6 +8,10 @@ NNData::NNData() {
 
 }
 
+std::vector<std::string> NNData::GetImagePaths() {
+    return image_paths;
+}
+
 std::pair<std::vector<Mat>, std::vector<int>> NNData::LoadFromDirectory(std::string dir_path) {
 
     std::vector<Mat> images;
@@ -15,6 +19,8 @@ std::pair<std::vector<Mat>, std::vector<int>> NNData::LoadFromDirectory(std::str
 
     // Go through all images in the directory
     for(auto &file_path : std::experimental::filesystem::directory_iterator(dir_path)) {
+
+        image_paths.push_back(file_path.path().string().substr(7));
 
         // Retrieve the image and resize it
         Mat image = imread(file_path.path().string());

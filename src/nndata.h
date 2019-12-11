@@ -23,6 +23,7 @@ class NNData {
         int kChannels = 3;
         int kNumPixels = kImageSize * kImageSize * kChannels;
         double kMaxPixelValue = 255.0;
+        std::vector<std::string> image_paths;
 
 
     public:
@@ -31,6 +32,8 @@ class NNData {
          * Default constructor
          */
         NNData();
+
+        std::vector<std::string> GetImagePaths();
 
         /**
          * Given the directory path, load the data (images and labels) into

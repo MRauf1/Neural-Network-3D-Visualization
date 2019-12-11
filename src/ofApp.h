@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "nn_visualization.h"
 
 class ofApp : public ofBaseApp{
 
@@ -22,9 +23,14 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		ofEasyCam camera;
-
 		int kCameraSpeed = 10;
 
-		ofImage test;
+		int kImageSize = 32;
+		int kChannels = 3;
+		int kNumPixels = kImageSize * kImageSize * kChannels;
+		std::vector<int> kNeurons = {kNumPixels, 750, 375, 1};
+
+		NNVisualization nn_visualization;
+
 
 };

@@ -27,10 +27,12 @@ class NN {
         std::vector<MatrixXd> activation_history;
         double learning_rate;
         double threshold = 0.50;
-        std::string kModelFolderPath = "../bin/data/model/";
+        std::string kModelFolderPath = "data/model/";
 
 
     public:
+
+        NN();
 
         /**
          * Training constructor for the Neural Network
