@@ -1,6 +1,6 @@
 # Neural Network Visualization
 
-A simple visualization of a basic deep neural network in 3D space.
+A simple visualization of a basic deep neural network in 3D space with the ability to move around the space. The Neural Network is specifically designed to classify dogs and cats from the Kaggle dataset: https://www.kaggle.com/c/dogs-vs-cats/overview
 
 ### Dependencies
 * OpenFrameworks
