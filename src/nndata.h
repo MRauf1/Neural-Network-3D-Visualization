@@ -33,6 +33,9 @@ class NNData {
          */
         NNData();
 
+        /**
+         * Getter for image_paths
+         */
         std::vector<std::string> GetImagePaths();
 
         /**
@@ -63,8 +66,22 @@ class NNData {
          */
         std::vector<Mat> ConvertTo1D(std::vector<Mat> images);
 
+        /**
+         * Converts the vector of OpenCV images to a vector of
+         * Eigen matrices
+         *
+         * @param  std::vector<Mat> Vector of OpenCV images
+         * @return                  Vector of Eigen matrices
+         */
         std::vector<MatrixXd> ConvertToEigen(std::vector<Mat>);
 
+        /**
+         * Performs all the preprocessing on the images
+         * Scales the pixel values to the range 0-1
+         *
+         * @param  images Vector of images
+         * @return        Vector of preprocessed images
+         */
         std::vector<MatrixXd> Preprocess(std::vector<MatrixXd> images);
 
 };

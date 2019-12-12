@@ -2,7 +2,6 @@
 
 using namespace cv;
 using Eigen::MatrixXd;
-//namespace filesystem = std::experimental::filesystem;
 
 NNData::NNData() {
 
@@ -20,6 +19,7 @@ std::pair<std::vector<Mat>, std::vector<int>> NNData::LoadFromDirectory(std::str
     // Go through all images in the directory
     for(auto &file_path : std::experimental::filesystem::directory_iterator(dir_path)) {
 
+        // Store the image paths
         image_paths.push_back(file_path.path().string().substr(7));
 
         // Retrieve the image and resize it
@@ -60,6 +60,7 @@ std::vector<Mat> NNData::ConvertTo1D(std::vector<Mat> images) {
 
     std::vector<Mat> reshaped_images;
 
+    // Reshape all images
     for(Mat image : images) {
         reshaped_images.push_back(image.reshape(1, kNumPixels));
     }
@@ -68,11 +69,11 @@ std::vector<Mat> NNData::ConvertTo1D(std::vector<Mat> images) {
 
 }
 
-// TODO: Make this more generalized
 std::vector<MatrixXd> NNData::ConvertToEigen(std::vector<Mat> images) {
 
     std::vector<MatrixXd> images_matrix;
 
+    // Convert all images to Eigen matrices
     for(Mat image : images) {
         MatrixXd image_matrix(kNumPixels, 1);
         cv2eigen(image, image_matrix);
@@ -85,6 +86,7 @@ std::vector<MatrixXd> NNData::ConvertToEigen(std::vector<Mat> images) {
 
 std::vector<MatrixXd> NNData::Preprocess(std::vector<MatrixXd> images) {
 
+    // Scale all images to the range 0-1
     for(int index = 0; index < images.size(); index++) {
         images.at(index) /= kMaxPixelValue;
     }

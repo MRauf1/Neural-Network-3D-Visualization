@@ -21,12 +21,14 @@ void ofApp::setup(){
     nn.LoadModel();
 
     std::cout << "Finished loading the model" << std::endl;
+    std::cout << "Initializing the visualization" << std::endl;
 
     nn_visualization.Initialize(image_paths, images, validation_data.second, nn);
 
+    std::cout << "Finished the initialization" << std::endl;
+
     ofEnableDepthTest();
     ofSetVerticalSync(true);
-
     camera.setPosition(500, 500, 1500);
 
 
@@ -42,8 +44,15 @@ void ofApp::draw(){
 
     camera.begin();
 
-    nn_visualization.PassFeedForward();
+    // Keep each image for frame_divider times
+	if(ofGetFrameNum() % frame_divider != 0) {
+		nn_visualization.SetIndex(nn_visualization.GetIndex() - 1);
+	}
+
+    // Predict and draw the visualization
     nn_visualization.DrawImage();
+    nn_visualization.PassFeedforward();
+    nn_visualization.DrawLabel();
     nn_visualization.DrawAllLayers();
 
     camera.end();
@@ -53,7 +62,7 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
-    // Camera movement keys
+    // Camera movement keys for navigating through 3D space
     if(key == 'w') {
         camera.move(0, kCameraSpeed, 0);
     } else if(key == 'a') {

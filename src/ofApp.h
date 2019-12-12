@@ -24,6 +24,7 @@ class ofApp : public ofBaseApp{
 
 		ofEasyCam camera;
 		int kCameraSpeed = 10;
+		int frame_divider = 30;
 
 		int kImageSize = 32;
 		int kChannels = 3;
@@ -31,6 +32,5 @@ class ofApp : public ofBaseApp{
 		std::vector<int> kNeurons = {kNumPixels, 750, 375, 1};
 
 		NNVisualization nn_visualization;
-
 
 };

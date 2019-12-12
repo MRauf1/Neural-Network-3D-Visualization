@@ -130,18 +130,19 @@ void NN::Backpropagation(int label, MatrixXd prediction) {
 
     // Go through each layer and update every weight and bias
     for(int layer = 0; layer < this->weights.size(); layer++) {
-
         this->weights.at(layer) -= (learning_rate * weight_change.at(layer));
         this->biases.at(layer) -= (learning_rate * bias_change.at(layer));
-
     }
 
+    // Clear the variables
     ClearHistory();
     ClearActivationHistory();
 
 }
 
 // NEEDS REFACTORING
+// Huge thanks to Michael Nielsen's book "Neural Networks and Deep Learning"
+// for acting as guidance: http://neuralnetworksanddeeplearning.com/chap2.html
 std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int label, MatrixXd prediction) {
 
     std::vector<MatrixXd> weight_change(this->weights.size());
@@ -178,7 +179,7 @@ std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int 
         MatrixXd next_layer_error = layer_errors.at(layer_errors_iterator);
         layer_errors_iterator++;
 
-        // Compute the error
+        // Compute the first part of the error
         MatrixXd layer_error = transposed_weight * next_layer_error;
 
         // Calculate the derivative of the layer
@@ -197,8 +198,8 @@ std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> NN::CalculateErrors(int 
 
     }
 
+    // Return the updates
     std::pair<std::vector<MatrixXd>, std::vector<MatrixXd>> changes = {weight_change, bias_change};
-
     return changes;
 
 }
@@ -220,22 +221,25 @@ void NN::Train(int epochs, std::vector<MatrixXd> images, std::vector<int> labels
         // For each epoch, train on every available image
         for(int image_num = 0; image_num < images.size(); image_num++) {
 
+            // Get the prediction and the label
             MatrixXd prediction = Feedforward(images.at(image_num));
             std::vector<int> label = {labels.at(image_num)};
-            std::vector<MatrixXd> prediction_two = {prediction};
 
-            error_total += MSE(label, prediction_two);
+            // Calculate the Mean Squared Error
+            error_total += MSE(label, {prediction});
             double error_average = (error_total / (image_num + 1));
             std::cout << "Image: " << image_num << " Error: " << error_average << std::endl;
 
+            // Calculate the accuracy
             if((prediction(0, 0) >= threshold && label.at(0) == 1) ||
-                (prediction(0, 0) < threshold && label.at(0) == 0)) {
+                    (prediction(0, 0) < threshold && label.at(0) == 0)) {
                 accuracy += 1;
             }
 
             double accuracy_average = (accuracy / (image_num + 1));
             std::cout << "Accuracy: " << accuracy_average << std::endl;
 
+            // Update the weights and biases
             Backpropagation(labels.at(image_num), prediction);
 
         }
@@ -262,7 +266,7 @@ double NN::Evaluate(std::vector<MatrixXd> images, std::vector<int> labels) {
 
         // Check if the image was predicted correctly
         if((prediction(0, 0) >= threshold && label.at(0) == 1) ||
-            (prediction(0, 0) < threshold && label.at(0) == 0)) {
+                (prediction(0, 0) < threshold && label.at(0) == 0)) {
             accuracy += 1;
         }
 
@@ -319,7 +323,8 @@ void NN::LoadModel() {
         std::regex regex("\\s+");
 
         // Get the needed values for later storing the matrices in correct order
-        bool is_weight = (file_name.substr(11, 6).compare("weight") == 0);
+        std::string pure_file_name = file_path.path().filename();
+        bool is_weight = (pure_file_name.substr(0, 6).compare("weight") == 0);
         std::regex num_regex("\\d+");
         std::smatch num_regex_result;
         std::regex_search(file_name, num_regex_result, num_regex);
@@ -362,6 +367,7 @@ void NN::LoadModel() {
 
         }
 
+        // Store the loaded weights/biases in the temporary variables
         if(is_weight) {
             temp_weights.at(index) = matrix;
         } else {

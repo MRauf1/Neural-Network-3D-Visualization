@@ -32,6 +32,9 @@ class NN {
 
     public:
 
+        /**
+         * Default constructor
+         */
         NN();
 
         /**
@@ -191,6 +194,14 @@ class NN {
          */
         void Train(int epochs, std::vector<MatrixXd> images, std::vector<int> labels);
 
+        /**
+         * Given the testing images and labels, calculate the
+         * accuracy of the model
+         *
+         * @param  images Vector of testing images
+         * @param  labels Vector of image labels
+         * @return        Accuracy of the model
+         */
         double Evaluate(std::vector<MatrixXd> images, std::vector<int> labels);
 
         /**

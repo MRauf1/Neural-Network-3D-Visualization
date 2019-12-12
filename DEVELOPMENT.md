@@ -47,13 +47,42 @@
 -Tested the new code\
 -Added the helper method for clearing the history
 
-**12/7/19**
+**12/7/19**\
 -Coded the function for computing the derivative of the loss function\
 -Tested the loss derivative\
 -Coded the function for applying the sigmoid derivative over the whole matrix\
--Tested the sigmoid derivative function\
+-Tested the sigmoid derivative function
 
-**12/8/19**
+**12/8/19**\
 -Added a variable for keeping track of activation history\
 -Modified Feedforward to update the activation history\
 -Wrapped up with the CalculateErrors method, which is used to find the desired changes to the weights and biases
+
+**12/9/19**\
+-Finished the Backpropagation method\
+-Wrote the main function for training the model\
+-Added the MSE variable in the training function\
+-Added the accuracy variable in the training function\
+-Wrote a quick little file to test out the training of the model\
+-Began training the first version of the model
+
+**12/10/19**\
+-Added the function for saving the weights of the model\
+-Added the function for loading the weights of the model\
+-Trained a working version of the model\
+-Began experimenting with the GUI
+
+**12/11/19**\
+-Added the image_paths variable in NNData\
+-Added a separate function in NN for calculating the accuracy of the model\
+-Created the NNVisualization class in charge of creating the visualizations\
+-Added key binds to be able to navigate the 3D space\
+-Added the EasyCam\
+-Developed the function for displaying the images\
+-Developed the function for creating the neurons for each layer\
+-Added different colors to the neurons based on the activation values\
+-Tried to add the weights between the neurons, but it's too computationally expensive so the code is currently commented out\
+-Added the BitmapString for displaying the predicted label\
+-More thoroughly commented the code\
+-Refactored parts of the code\
+-Filled out the README.md

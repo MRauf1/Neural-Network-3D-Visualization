@@ -55,8 +55,6 @@ TEST_CASE("Check the constructor") {
 }
 
 // Check Feedforward method
-// WARNING: Correctness of calculations of Feedforward
-// is not tested. Potentially implement it.
 TEST_CASE("Check matrix size after Feedforward") {
     MatrixXd sample_matrix = MatrixXd::Random(3, 1);
     MatrixXd result = simple_test_nn.Feedforward(sample_matrix);
@@ -196,7 +194,7 @@ TEST_CASE("Check the MSEDerivative method") {
 }
 
 // Check CalculateErrors method
-// NOT FINISHED
+// Checked if the method works without breaking
 TEST_CASE("Check the error of output layer") {
     MatrixXd sample_matrix = MatrixXd::Random(3, 1);
     MatrixXd result = nn_two.Feedforward(sample_matrix);
@@ -207,7 +205,7 @@ TEST_CASE("Check the error of output layer") {
 }
 
 // Check Backpropagation method
-// NOT FINISHED
+// Checked if the method works without breaking
 TEST_CASE("Check the error of output layer 2") {
     MatrixXd sample_matrix = MatrixXd::Random(3, 1);
     MatrixXd result = nn_two.Feedforward(sample_matrix);
