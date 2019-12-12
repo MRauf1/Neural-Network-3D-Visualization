@@ -29,6 +29,7 @@ class ofApp : public ofBaseApp{
 		int kImageSize = 32;
 		int kChannels = 3;
 		int kNumPixels = kImageSize * kImageSize * kChannels;
+		int kNumData = 5000;
 		std::vector<int> kNeurons = {kNumPixels, 750, 375, 1};
 
 		NNVisualization nn_visualization;

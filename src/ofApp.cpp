@@ -44,6 +44,11 @@ void ofApp::draw(){
 
     camera.begin();
 
+    // Go back to the first image if currently on the last image
+    if(nn_visualization.GetIndex() == (kNumData - 1)) {
+        nn_visualization.SetIndex(0);
+    }
+
     // Keep each image for frame_divider times
 	if(ofGetFrameNum() % frame_divider != 0) {
 		nn_visualization.SetIndex(nn_visualization.GetIndex() - 1);
